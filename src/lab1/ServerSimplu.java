@@ -13,7 +13,7 @@
  * 2. Modificati aplicatia server astefl incat aceasta sa accepte conexiuni sosite 
  * numai de pe anumite IP-uri.
  */
-package lab.scd.net.socket;
+package lab1;
 
 import java.io.*;
 import java.net.InetAddress;

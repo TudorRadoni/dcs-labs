@@ -10,7 +10,7 @@
  * 1. Modificati aplicatia client astfel incat aceasta sa trimita catre server mesaje
  * citite de la tastatura. 
  */
-package lab.scd.net.socket;
+package lab1;
 
 import java.net.*;
 import java.util.Scanner;
