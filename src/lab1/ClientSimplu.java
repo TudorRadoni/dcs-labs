@@ -17,9 +17,9 @@ import java.util.Scanner;
 import java.io.*;
 
 public class ClientSimplu {
-
 	public static void main(String[] args) throws Exception {
 		Socket socket = null;
+		
 		try {
 			// creare obiect address care identifica adresa serverului
 			InetAddress server_address = InetAddress.getByName("localhost");

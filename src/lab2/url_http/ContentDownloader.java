@@ -17,25 +17,22 @@ import java.net.URL;
  * metoda getContent() din cadrul clasei URL.
  */
 public class ContentDownloader {
-
     public static void main(String[] args) {
         String url = "http://utcluj.ro/index.html";
-        
-        // Open the URL for reading
+
         try {
             URL u = new URL(url);
             try {
                 Object o = u.getContent();
                 System.out.println("I got a " + o.getClass().getName());
-            } // end try
+            }
             catch (IOException e) {
                 System.err.println(e);
             }
-        } // end try
+        }
 
         catch (MalformedURLException e) {
             System.err.println(url + " is not a parseable URL");
         }
-
-    } // end main
+    } 
 }

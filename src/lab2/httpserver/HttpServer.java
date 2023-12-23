@@ -26,14 +26,13 @@ public class HttpServer extends Thread {
 	HttpServer() throws Exception {
 		System.out.println("Start server http.");
 		ss = new ServerSocket(PORT);
-		
+
 		alive = true;
 		start();
 	}
 
 	public void run() {
 		while (alive) {
-
 			// asteapta conexiuni
 			try {
 				System.out.println("Server asteapta...");
@@ -42,7 +41,6 @@ public class HttpServer extends Thread {
 			} catch (IOException e) {
 				System.err.println("EROARE CONECTARE:" + e.getMessage());
 			}
-			// ..reia bucla de asteptare dupa ce am creat un fir pentru client
 		}
 		System.out.println("STOP SERVER");
 	}
@@ -54,7 +52,6 @@ public class HttpServer extends Thread {
 			e.printStackTrace();
 		}
 	}
-
 }
 
 class ProcesRequest extends Thread {

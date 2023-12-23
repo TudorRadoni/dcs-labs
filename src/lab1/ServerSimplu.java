@@ -24,12 +24,10 @@ import java.net.SocketAddress;
 
 public class ServerSimplu {
 	public static void main(String[] args) throws IOException {
-
 		ServerSocket ss = null;
 		Socket s = null;
 
 		try {
-			String line = "";
 			ss = new ServerSocket(1900); // creaza obiectul serversocket
 			System.out.println("Serverul asteapta conexiuni...");
 			s = ss.accept(); // incepe asteptarea de conexiuni pe portul 1900
@@ -53,14 +51,14 @@ public class ServerSimplu {
 			System.out.println("Client nou conectat: " + remotehost + ":" + remoteport);
 
 			// while (!line.equals("END")) {
-			// 	line = in.readLine(); // citeste datele de la client
-			// 	System.out.println("Server a receptionat:" + line);	
+			// line = in.readLine(); // citeste datele de la client
+			// System.out.println("Server a receptionat:" + line);
 			// }
 
 			int x = Integer.parseInt(in.readLine());
 			int y = Integer.parseInt(in.readLine());
 
-			out.println((float)y / (x * 100));
+			out.println((float) y / (x * 100));
 			out.flush();
 
 			System.out.println("Aplicatie server gata.");
