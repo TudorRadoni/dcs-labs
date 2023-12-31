@@ -7,12 +7,12 @@ import java.util.Map;
 
 public class FuzzyToken {
 
-//representing a fuzzy token
+    // representing a fuzzy token
 
     private Map<FuzzyValue, Double> fuzzyValues;
 
     public FuzzyToken(Double NL, Double NM, Double ZR, Double PM,
-                      Double PL) {
+            Double PL) {
         fuzzyValues = new EnumMap<>(FuzzyValue.class);
         fuzzyValues.put(FuzzyValue.NL, NL);
         fuzzyValues.put(FuzzyValue.NM, NM);
@@ -22,7 +22,7 @@ public class FuzzyToken {
         normalize();
     }
 
-//normalizing the values
+    // normalizing the values
 
     public void normalize() {
         double sum = 0.0;
@@ -45,7 +45,7 @@ public class FuzzyToken {
         return fuzzyValues.get(val);
     }
 
-//returning the elements in fuzzyset with value different from zero
+    // returning the elements in fuzzyset with value different from zero
 
     public List<FuzzyValue> getNonZeroValues() {
         List<FuzzyValue> toRet = new ArrayList<>();
