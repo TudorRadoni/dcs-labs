@@ -142,6 +142,7 @@ public class Exp3_Part1 {
 	public static PetriNet SubPetriNet() {
 		PetriNet subPetriNet = new PetriNet();
 		subPetriNet.PetriNetName = "SubPetriNet";
+		subPetriNet.NetworkPort = 0;
 
 		DataFloat p31 = new DataFloat();
 		p31.SetName("p31");
@@ -156,13 +157,13 @@ public class Exp3_Part1 {
 		p33.SetName("p33");
 		subPetriNet.PlaceList.add(p33);
 
-//		DataFloat p34 = new DataFloat();
-//		p34.SetName("p34");
-//		subPetriNet.PlaceList.add(p34);
+		// DataFloat p34 = new DataFloat();
+		// p34.SetName("p34");
+		// subPetriNet.PlaceList.add(p34);
 
 		DataTransfer p34Send = new DataTransfer();
 		p34Send.SetName("p34Send");
-		p34Send.Value = new TransferOperation("localhost", "1080", "p3");
+		p34Send.Value = new TransferOperation("localhost", "1080", "p6");
 		subPetriNet.PlaceList.add(p34Send);
 
 		DataFloat constantZeroPointTwo = new DataFloat();
@@ -223,27 +224,11 @@ public class Exp3_Part1 {
 		grdT33.condition = T33Ct1;
 
 		grdT33.Activations.add(new Activation(t33, "p33", TransitionOperation.Move, "p31"));
-		grdT33.Activations.add(new Activation(t33, "p33", TransitionOperation.Move, "p34"));
+		grdT33.Activations.add(new Activation(t33, "p33", TransitionOperation.SendOverNetwork, "p34"));
 
 		t33.GuardMappingList.add(grdT33);
 		t33.Delay = 0;
 		subPetriNet.Transitions.add(t33);
-
-		// T33 Send ------------------------------------------------
-		PetriTransition t33Send = new PetriTransition(subPetriNet);
-		t33Send.TransitionName = "t33Send";
-		t33Send.InputPlaceName.add("p34");
-
-		Condition T33SendCt1 = new Condition(t33Send, "p34", TransitionCondition.NotNull);
-
-		GuardMapping grdT33Send = new GuardMapping();
-		grdT33Send.condition = T33SendCt1;
-
-		grdT33Send.Activations.add(new Activation(t33Send, "p34", TransitionOperation.SendOverNetwork, "p3"));
-
-		t33Send.GuardMappingList.add(grdT33Send);
-		t33Send.Delay = 0;
-		subPetriNet.Transitions.add(t33Send);
 
 		// T34 ------------------------------------------------
 		PetriTransition t34 = new PetriTransition(subPetriNet);
@@ -251,6 +236,8 @@ public class Exp3_Part1 {
 		t34.InputPlaceName.add("p33");
 
 		Condition T34Ct1 = new Condition(t33, "p33", TransitionCondition.NotNull);
+		Condition T34Ct2 = new Condition(t33, "p33", TransitionCondition.MoreThan, "constantFour");
+		T34Ct1.SetNextCondition(LogicConnector.AND, T34Ct2);
 
 		GuardMapping grdT34 = new GuardMapping();
 		grdT34.condition = T34Ct1;
@@ -263,7 +250,6 @@ public class Exp3_Part1 {
 
 		return subPetriNet;
 	}
-
 
 	public static void main(String[] args) {
 		PetriNet pn = new PetriNet();
@@ -291,7 +277,7 @@ public class Exp3_Part1 {
 
 		DataFloat p2 = new DataFloat();
 		p2.SetName("p2");
-		p2.SetValue(1.0f); //testing
+		p2.SetValue(1.0f); // testing
 		pn.PlaceList.add(p2);
 
 		DataSubPetriNet p3 = new DataSubPetriNet();
@@ -335,6 +321,11 @@ public class Exp3_Part1 {
 		Condition T1Ct2 = new Condition(t1, "p2", TransitionCondition.LessThan, "constantVal2");
 		T1Ct1.SetNextCondition(LogicConnector.AND, T1Ct2);
 
+		// Second subGuard
+		Condition T1Ct3 = new Condition(t1, "p1", TransitionCondition.NotNull);
+		Condition T1Ct4 = new Condition(t1, "p2", TransitionCondition.MoreThanOrEqual, "constantVal2");
+		T1Ct3.SetNextCondition(LogicConnector.AND, T1Ct4);
+
 		GuardMapping grdT1 = new GuardMapping();
 		grdT1.condition = T1Ct1;
 
@@ -342,19 +333,16 @@ public class Exp3_Part1 {
 		grdT1.Activations.add(new Activation(t1, "p1", TransitionOperation.Move, "p4"));
 		grdT1.Activations.add(new Activation(t1, "p2", TransitionOperation.Move, "p3-p31"));
 
-		// Second subGuard
-		Condition T1Ct3 = new Condition(t1, "p1", TransitionCondition.NotNull);
-		Condition T1Ct4 = new Condition(t1, "p2", TransitionCondition.MoreThanOrEqual, "constantVal2");
-		T1Ct3.SetNextCondition(LogicConnector.AND, T1Ct4);
-
 		GuardMapping grd12 = new GuardMapping();
 		grd12.condition = T1Ct3;
 
 		// P3 is another subPetriNet
 		grd12.Activations.add(new Activation(t1, "anotherSubPetriNet", TransitionOperation.Copy, "p3"));
+		grd12.Activations.add(new Activation(t1, "p1", TransitionOperation.Move, "p4"));
+		grd12.Activations.add(new Activation(t1, "p2", TransitionOperation.Move, "p3-p31"));
 
 		t1.GuardMappingList.add(grdT1);
-		t1.GuardMappingList.add(grd12);  // Second subGuard to t1
+		t1.GuardMappingList.add(grd12); // Second subGuard to t1
 		t1.Delay = 0;
 		pn.Transitions.add(t1);
 
@@ -368,8 +356,7 @@ public class Exp3_Part1 {
 		GuardMapping grdT3Send = new GuardMapping();
 		grdT3Send.condition = T3SendCt1;
 
-		grdT3Send.Activations.add(new Activation(t3Send, "p3", TransitionOperation.Move, "p3Send"));
-		grdT3Send.Activations.add(new Activation(t3Send, "p3", TransitionOperation.SendOverNetwork, "p22"));
+		grdT3Send.Activations.add(new Activation(t3Send, "p3", TransitionOperation.SendOverNetwork, "p3Send"));
 
 		t3Send.GuardMappingList.add(grdT3Send);
 		t3Send.Delay = 0;
